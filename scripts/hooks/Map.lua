@@ -65,7 +65,7 @@ function Map:loadClimbAreas(layer, depth)
 
         local obj
         -- TODO: Make ClimbArea a registered event
-        obj = Registry.createLegacyEvent("climbarea", v)
+        obj = Game.builtin_event_registry:create("climbarea", v)
         obj.x = obj.x + (layer.offsetx or 0)
         obj.y = obj.y + (layer.offsety or 0)
         if not obj.object_id then
