@@ -139,15 +139,26 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
     if #sprites == 0 then return end
 
     local delaytime = 30
-	if type == 2 then
+	if destroytype == 2 then
 		delaytime = 10
 	end
-	if type == 3 then
+	if destroytype == 3 then
 		delaytime = 5
 	end
 	if self.break_delay then
 		delaytime = self.break_delay
 	end
+
+	-- Someone needs to figure out the correct position
+	local broken_container = Object((self.x+self.width/2)-self.panel_width+self.container_offset_x/2, (self.y-self.height/2)-self.panel_height*2+self.container_offset_y/2, self.panel_width, self.panel_height)
+    --broken_container:setScaleOrigin(0.5, 0.5)
+    broken_container:setLayer(self:getLayer())
+	broken_container.draw_children_below = 0
+    self.parent:addChild(broken_container)
+
+    broken_container.timer = Timer()
+    broken_container:addChild(broken_container.timer)
+    local timer = broken_container.timer
 
 	self.world.timer:after(delaytime/30, function()
 		if sparkles then
@@ -155,7 +166,7 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 				local groundshard = ProphecyGroundShard((self.x - 199) + ((i * 398) / 30) + MathUtils.random(-30, 30), self.y + MathUtils.random(120))
 				groundshard.layer = self.layer
 				groundshard.ytarg = self.y + SCREEN_HEIGHT/2
-				if type == 3 then
+				if destroytype == 3 then
 					groundshard.ytarg = groundshard.ytarg + 10000
 					self.world.timer:after(280/30, function()
 						groundshard:remove()
@@ -164,35 +175,25 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 				Game.world:addChild(groundshard)
 			end
 		end
-		if type < 2 then
-			broken_container.timer:after(120/30, function()
+		if destroytype < 2 then
+			timer:after(120/30, function()
 				broken_container:remove()
 			end)
 			self:remove()
 		end
 	end)
 	if not silent then
-		if type ~= 3 then
+		if destroytype ~= 3 then
 			Assets.playSound("break1", 1, 0.95)
 		end
 		if not second_silent then
-			broken_container.timer:after(delaytime+2/30, function() Assets.playSound("glassbreak", 0.4, 0.6) end)
-			broken_container.timer:after(delaytime/30, function() Assets.playSound("sparkle_glock", 0.5, 0.8) end)
-			broken_container.timer:after(delaytime/30, function() Assets.playSound("sparkle_glock", 0.5, 0.71) end)
-			broken_container.timer:after(delaytime/30, function() Assets.playSound("punchmed", 0.95, 0.7) end)
+			timer:after(delaytime+2/30, function() Assets.playSound("glassbreak", 0.4, 0.6) end)
+			timer:after(delaytime/30, function() Assets.playSound("sparkle_glock", 0.5, 0.8) end)
+			timer:after(delaytime/30, function() Assets.playSound("sparkle_glock", 0.5, 0.71) end)
+			timer:after(delaytime/30, function() Assets.playSound("punchmed", 0.95, 0.7) end)
 		end
 	end
-	
-    local broken_container = Object(self.x-self.panel_width, self.y-self.panel_height)
-    broken_container:setScaleOrigin(0.5, 0.5)
-    broken_container:setLayer(self:getLayer())
-	broken_container.draw_children_below = 0
-    self.parent:addChild(broken_container)
 
-    broken_container.timer = Timer()
-    broken_container:addChild(broken_container.timer)
-
-    local timer = broken_container.timer
     for i, texture in ipairs(sprites) do
         local s = Sprite(texture)
         s:setScale(2)
@@ -203,7 +204,7 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 			s.physics.speed = 2
 			s.physics.friction = 0.5
 			s.physics.direction = math.rad(MathUtils.random(360))
-			broken_container.timer:after(delaytime/30, function()
+			timer:after(delaytime/30, function()
 				s.physics.gravity = 0.5 + MathUtils.random(0.1)
 				s.physics.friction = 0
 				s.physics.speed = 2
@@ -214,10 +215,10 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 			s.physics.speed = 2
 			s.physics.friction = 0.5
 			s.physics.direction = math.rad(MathUtils.random(360))
-			broken_container.timer:after(delaytime/30, function()
+			timer:after(delaytime/30, function()
 				s.physics.speed = 4
 				s.physics.friction = 0.4
-				broken_container.timer:lerpVar(s, "alpha", alpha, 0, 20)
+				timer:lerpVar(s, "alpha", s.alpha, 0, 20)
 			end)
 		end
 		if destroytype == 2 then
@@ -234,7 +235,7 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 			end
 			s.physics.speed, s.physics.direction = s:getSpeedDir()
 			s.physics.gravity_direction = math.rad(270)
-			broken_container.timer:after(delaytime/30, function()
+			timer:after(delaytime/30, function()
 				s.physics.gravity = 0.25 + MathUtils.random(0.1)
 				s.physics.friction = 0
 				s.physics.speed = 2 + (((#sprites - i) / #sprites) * 15)
@@ -249,7 +250,7 @@ function Prophecy:breakProphecy(type, sprite, sparkles, silent, second_silent)
 			s.physics.friction = 0.5
 			s.physics.direction = math.rad(270)
 			local delay = (delaytime * MathUtils.random(5)) + 1
-			broken_container.timer:after(delay/30, function()
+			timer:after(delay/30, function()
 				s.physics.gravity = 0.5 + MathUtils.random(0.1)
 				s.physics.friction = 0
 				s.physics.speed = 2
