@@ -27,7 +27,7 @@ function ProphecyGroundShard:update()
 			self.remove()
 		end
 	else
-		if self.y >= self.ytarg and Utils.pick({0, 1}) == 0 then
+		if self.y >= self.ytarg and TableUtils.pick({0, 1}) == 0 then
 			self:remove()
 		end
 	end
