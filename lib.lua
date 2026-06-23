@@ -137,6 +137,9 @@ function lib:init()
     Game:registerEvent("prophecy", function(data)
         return Prophecy(data)
     end)
+    Game:registerEvent("destructableclimbarea", function(data)
+    return DestructableClimbArea(data.x, data.y, { data.width, data.height }, data)
+    end)
 end
 
 function Ch4Lib.updateLightBeams(alpha)
