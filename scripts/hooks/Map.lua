@@ -3,6 +3,7 @@ local Map, super = HookSystem.hookScript(Map)
 
 function Map:init(world, data)
     super.init(self, world, data)
+    self.cyltower = nil
 end
 
 function Map:loadTiles(layer, depth)
