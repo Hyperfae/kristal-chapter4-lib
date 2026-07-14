@@ -87,7 +87,7 @@ function PlayerClimbState:drawReticleHint()
         local py = iy
 
         for i = 1, count do
-            local found_exit, exit = self:isOverlappingObjectBounds(px, py, ClimbExit)
+            local found_exit, exit = self:isOverlappingObject(ClimbExit, px, py)
             if found_exit and exit:canExit() then
                 ---@cast exit ClimbExit
                 if exit:getExitDirection() == self.direction then
@@ -381,7 +381,7 @@ function PlayerClimbState:updateClimbMove()
         local check_x = self.player.x - MathUtils.clamp(self.climbing_x_dir, -40, 40)
         local check_y = self.player.y - MathUtils.clamp(self.climbing_y_dir, -40, 40)
 
-        local found_exit, exit = self:isOverlappingObjectBounds(check_x, check_y, ClimbExit)
+        local found_exit, exit = self:isOverlappingObject(ClimbExit, check_x, check_y)
 
         local use_exit = nil
 
