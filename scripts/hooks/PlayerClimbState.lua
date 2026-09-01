@@ -179,8 +179,8 @@ function PlayerClimbState:drawReticleHint()
 
         Draw.setColor(col)
 		for subsection = 0, count - 1 do
-			local tilex = tilex + ((subsection + 1) * shiftx)
-			local tiley = tiley + ((subsection + 1) * shifty)	
+			local tilex = _tilex + ((subsection + 1) * shiftx)
+			local tiley = _tiley + ((subsection + 1) * shifty)	
 			if tilex >= Game.world.map.cyltower.horizontaltilecount then
 				tilex = tilex - Game.world.map.cyltower.horizontaltilecount
 			end
