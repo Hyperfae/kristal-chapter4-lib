@@ -93,13 +93,13 @@ function PlayerClimbState:drawReticleHint()
             end
 
             if self.direction == "down" then
-                py = self.player.y + (40 * i)
+                py = self.player.lasty + (40 * i)
             elseif self.direction == "right" then
-                px = self.player.x + (40 * i)
+                px = self.player.lastx + (40 * i)
             elseif self.direction == "up" then
-                py = self.player.y - (40 * i)
+                py = self.player.lasty - (40 * i)
             elseif self.direction == "left" then
-                px = self.player.x - (40 * i)
+                px = self.player.lastx - (40 * i)
             end
 			if px < 0 then
 				px = px + cyltower.tower_circumference
