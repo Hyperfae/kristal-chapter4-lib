@@ -185,7 +185,6 @@ function PlayerClimbState:drawReticleHint()
 		love.graphics.translate(-(Game.world.camera.x - SCREEN_WIDTH/2), -(Game.world.camera.y - SCREEN_HEIGHT/2))
 		for subsection = 0, count - 1 do
 			local tilex = _tilex + ((subsection + 1) * shiftx)
-			local tiley = _tiley + ((subsection + 1) * shifty)	
 			if tilex >= cyltower.horizontaltilecount then
 				tilex = tilex - cyltower.horizontaltilecount
 			end
