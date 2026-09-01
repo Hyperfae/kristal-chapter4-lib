@@ -163,7 +163,7 @@ function PlayerClimbState:drawReticleHint()
         end
 		local starttable = {0, 21, 41}
 		local widthtable = {21, 20, 21}
-		local totalstartx = Game.world.map.cyltower.tower_x - tile.x - 20
+		local totalstartx = Game.world.map.cyltower.tower_x - tile.x + xoff - 20
 		local totalwidth = (self.charge_timer / self.charge_time_2) * 62
 		local count = 3
 		local divisor = 120
