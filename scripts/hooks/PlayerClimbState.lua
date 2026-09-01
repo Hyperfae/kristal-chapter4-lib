@@ -63,6 +63,7 @@ function PlayerClimbState:drawReticleHint()
     if not Game.world.map.cyltower then
         return super.drawReticleHint(self)
     end
+	local cyltower = Game.world.map.cyltower
     if not self._draw_reticle then
         return 0, 0
     end
@@ -80,8 +81,8 @@ function PlayerClimbState:drawReticleHint()
         end
 
                 
-        local ix = self.player.x
-        local iy = self.player.y
+        local ix = 0
+        local iy = 0
 
         local px = ix
         local py = iy
@@ -105,10 +106,10 @@ function PlayerClimbState:drawReticleHint()
                 px = ix - (40 * i)
             end
 			if px < 0 then
-				px = px + Game.world.map.cyltower.tower_circumference
+				px = px + cyltower.tower_circumference
 			end
-			if px > Game.world.map.cyltower.tower_circumference then
-				px = px - Game.world.map.cyltower.tower_circumference
+			if px > cyltower.tower_circumference then
+				px = px - cyltower.tower_circumference
 			end
             if self:isOverlappingClimbable(px, py, ClimbArea) or NOCLIP then
                 found = i
@@ -116,20 +117,20 @@ function PlayerClimbState:drawReticleHint()
         end
 
         alpha = MathUtils.clamp(self.charge_timer / 14, 0.1, 0.8)
-		local px = self.player.x		
-		if Game.world.map.cyltower.appearance == 1 then
+        local px = self.player.lastx + (self.player.width / 2) - 20
+		if cyltower.appearance == 1 then
 			px = px + 40
 		end
-		local py = self.player.y - 20
+        local py = self.player.lasty + (self.player.height / 2) - 20
 		local _tilex = px / Game.world.map.cyltower.tile_width_fine
 		local _tiley = py / Game.world.map.cyltower.tile_height_fine
-		if _tilex >= Game.world.map.cyltower.horizontaltilecount then
-			_tilex = _tilex - Game.world.map.cyltower.horizontaltilecount
+		if _tilex >= cyltower.horizontaltilecount then
+			_tilex = _tilex - cyltower.horizontaltilecount
 		end
 		if _tilex < 0 then
-			_tilex = _tilex + Game.world.map.cyltower.horizontaltilecount
+			_tilex = _tilex + cyltower.horizontaltilecount
 		end
-		local tile = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][math.floor(_tilex) + 1]
+		local tile = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(_tilex) + 1]
         local angle = 0
         local xoff = 0
         local yoff = 0
@@ -143,7 +144,7 @@ function PlayerClimbState:drawReticleHint()
         elseif self.direction == "right" then
             angle = 90
             xoff = 18
-            yoff = 27
+            yoff = 22
 			shiftx = 1
         elseif self.direction == "up" then
             angle = 180
@@ -163,7 +164,7 @@ function PlayerClimbState:drawReticleHint()
         end
 		local starttable = {0, 21, 41}
 		local widthtable = {21, 20, 21}
-		local totalstartx = Game.world.map.cyltower.tower_x - tile.x + xoff - 20
+		local totalstartx = cyltower.tower_x - tile.x + xoff - 20
 		local totalwidth = (self.charge_timer / self.charge_time_2) * 62
 		local count = 3
 		local divisor = 120
@@ -185,19 +186,19 @@ function PlayerClimbState:drawReticleHint()
 		for subsection = 0, count - 1 do
 			local tilex = _tilex + ((subsection + 1) * shiftx)
 			local tiley = _tiley + ((subsection + 1) * shifty)	
-			if tilex >= Game.world.map.cyltower.horizontaltilecount then
-				tilex = tilex - Game.world.map.cyltower.horizontaltilecount
+			if tilex >= cyltower.horizontaltilecount then
+				tilex = tilex - cyltower.horizontaltilecount
 			end
 			if tilex < 0 then
-				tilex = tilex + Game.world.map.cyltower.horizontaltilecount
+				tilex = tilex + cyltower.horizontaltilecount
 			end
-			local tile2 = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][math.floor(tilex) + 1]
+			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex) + 1]
 			if tile2.vis == 1 then
-				local scalemultiplier = tile2.xscale / Game.world.map.cyltower.tile_width_fine
+				local scalemultiplier = tile2.xscale / cyltower.tile_width_fine
 				local sourcex = starttable[subsection + 1]
 				local sourcewidth = widthtable[subsection + 1]
 				local jankfix = 0
-				if subsection == count - 1 and Game.world.map.cyltower.tile_width_fine ~= Game.world.map.cyltower.tile_width and shiftx == -1 then
+				if subsection == count - 1 and cyltower.tile_width_fine ~= cyltower.tile_width and shiftx == -1 then
 					jankfix = (6 * (shiftx - 1)) / 2
 				end
 				Draw.drawPart(frames[index], totalstartx - jankfix, py + (self.player.height / 2) + yoff + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
