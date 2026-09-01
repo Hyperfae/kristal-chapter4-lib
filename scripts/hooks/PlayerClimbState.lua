@@ -85,7 +85,9 @@ function PlayerClimbState:drawReticleHint()
 
         local px = ix
         local py = iy
-
+		if Game.world.map.cyltower.appearance == 1 then
+			px = px + 40
+		end
         for i = 1, count do
             local found_exit, exit = self:isOverlappingObject(ClimbExit, px, py)
             if found_exit and exit:canExit() then
@@ -118,7 +120,7 @@ function PlayerClimbState:drawReticleHint()
 
         alpha = MathUtils.clamp(self.charge_timer / 14, 0.1, 0.8)
 		local px = self.player.x		
-		local px = self.player.y
+		local py = self.player.y
 		local _tilex = px / Game.world.map.cyltower.tile_width_fine
 		local _tiley = py / Game.world.map.cyltower.tile_height_fine
 		if _tilex >= Game.world.map.cyltower.horizontaltilecount then
