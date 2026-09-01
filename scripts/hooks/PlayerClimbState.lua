@@ -80,8 +80,8 @@ function PlayerClimbState:drawReticleHint()
             count = 3
         end
 
-        local px = self.player.x
-        local py = self.player.y
+        local px = self.player.lastx
+        local py = self.player.lasty
         for i = 1, count do
             local found_exit, exit = self:isOverlappingObject(ClimbExit, px, py)
             if found_exit and exit:canExit() then
