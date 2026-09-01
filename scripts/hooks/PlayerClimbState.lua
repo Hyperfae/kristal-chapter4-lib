@@ -80,12 +80,8 @@ function PlayerClimbState:drawReticleHint()
             count = 3
         end
 
-                
-        local ix = 0
-        local iy = 0
-
-        local px = ix
-        local py = iy
+        local px = self.player.x
+        local py = self.player.y
         for i = 1, count do
             local found_exit, exit = self:isOverlappingObject(ClimbExit, px, py)
             if found_exit and exit:canExit() then
@@ -97,31 +93,31 @@ function PlayerClimbState:drawReticleHint()
             end
 
             if self.direction == "down" then
-                py = iy + (40 * i)
+                py = self.player.y + (40 * i)
             elseif self.direction == "right" then
-                px = ix + (40 * i)
+                px = self.player.x + (40 * i)
             elseif self.direction == "up" then
-                py = iy - (40 * i)
+                py = self.player.y - (40 * i)
             elseif self.direction == "left" then
-                px = ix - (40 * i)
+                px = self.player.x - (40 * i)
             end
 			if px < 0 then
 				px = px + cyltower.tower_circumference
 			end
-			if px > cyltower.tower_circumference then
+			if px >= cyltower.tower_circumference then
 				px = px - cyltower.tower_circumference
 			end
-            if self:isOverlappingClimbable(px, py, ClimbArea) or NOCLIP then
+            if self:isOverlappingClimbable(ClimbArea, px, py) or NOCLIP then
                 found = i
             end
         end
 
         alpha = MathUtils.clamp(self.charge_timer / 14, 0.1, 0.8)
-        local px = self.player.lastx + (self.player.width / 2) - 20
+        local px = self.player.lastx + (self.player.width / 2)
 		if cyltower.appearance == 1 then
 			px = px + 40
 		end
-        local py = self.player.lasty + (self.player.height / 2) - 20
+        local py = self.player.lasty + (self.player.height / 2) - 40
 		local _tilex = math.floor(px / cyltower.tile_width_fine) + 1
 		if _tilex >= cyltower.horizontaltilecount then
 			_tilex = _tilex - cyltower.horizontaltilecount
@@ -163,9 +159,9 @@ function PlayerClimbState:drawReticleHint()
         end
 		local starttable = {0, 21, 41}
 		local widthtable = {21, 20, 21}
-		local totalstartx = cyltower.tower_x - tile.x + ((self.player.width / 2) + xoff) * 2 - 20
+		local totalstartx = cyltower.tower_x - tile.x + ((self.player.width / 2) + xoff) * 2
 		local totalwidth = (self.charge_timer / self.charge_time_2) * 62
-		local count = 3
+		count = 3
 		local divisor = 120
         local origin_x = 11
         -- The offset of 1 is (most likely) due to GameMaker rounding being different from ours.
@@ -184,14 +180,14 @@ function PlayerClimbState:drawReticleHint()
 		love.graphics.origin()
 		love.graphics.translate(-(Game.world.camera.x - SCREEN_WIDTH/2), -(Game.world.camera.y - SCREEN_HEIGHT/2))
 		for subsection = 0, count - 1 do
-			local tilex = _tilex + ((subsection + 1) * shiftx)
+			local tilex = _tilex - 1 + ((subsection + 1) * shiftx)
 			if tilex >= cyltower.horizontaltilecount then
 				tilex = tilex - cyltower.horizontaltilecount
 			end
 			if tilex < 0 then
 				tilex = tilex + cyltower.horizontaltilecount
 			end
-			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex)]
+			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex) + 1]
 			if tile2.vis == 1 then
 				local scalemultiplier = tile2.xscale / cyltower.tile_width_fine
 				local sourcex = starttable[subsection + 1]
@@ -201,7 +197,7 @@ function PlayerClimbState:drawReticleHint()
 					jankfix = (6 * (shiftx - 1)) / 2
 				end
 				Draw.drawPart(frames[index], totalstartx - jankfix, py + ((self.player.height / 2) + yoff) * 2 + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
-				totalstartx = totalstartx + (scalemultiplier * shiftx * sourcewidth * -2)
+				totalstartx = totalstartx + (scalemultiplier * shiftx * (sourcewidth - 1) * -2)
 			end
 		end
 		love.graphics.pop()
