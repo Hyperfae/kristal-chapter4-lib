@@ -118,14 +118,17 @@ function PlayerClimbState:drawReticleHint()
 			px = px + 40
 		end
         local py = self.player.lasty + (self.player.height / 2) - 40
-		local _tilex = math.floor(px / cyltower.tile_width_fine) + 1
+		local _tilex = px / cyltower.tile_width_fine
 		if _tilex >= cyltower.horizontaltilecount then
 			_tilex = _tilex - cyltower.horizontaltilecount
 		end
 		if _tilex < 0 then
 			_tilex = _tilex + cyltower.horizontaltilecount
 		end
-		local tile = cyltower.tile_data[cyltower.tm_tileset[1]][_tilex]
+		local tile = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(_tilex) + 1]
+		if not tile then
+			return 0, 0
+		end
         local angle = 0
         local xoff = 0
         local yoff = 0
@@ -188,6 +191,9 @@ function PlayerClimbState:drawReticleHint()
 				tilex = tilex + cyltower.horizontaltilecount
 			end
 			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex) + 1]
+			if not tile2 then
+				return 0, 0
+			end
 			if tile2.vis == 1 then
 				local scalemultiplier = tile2.xscale / cyltower.tile_width_fine
 				local sourcex = starttable[subsection + 1]
