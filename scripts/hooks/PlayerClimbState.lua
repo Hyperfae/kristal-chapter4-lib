@@ -203,7 +203,7 @@ function PlayerClimbState:drawReticleHint()
 				if subsection == count - 1 and cyltower.tile_width_fine ~= cyltower.tile_width and shiftx == -1 then
 					jankfix = (6 * (shiftx - 1)) / 2
 				end
-				Draw.drawPart(frames[index], totalstartx - jankfix, py + (self.player.height / 2) + yoff + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
+				Draw.drawPart(frames[index], totalstartx - jankfix + (self.player.width / 2) + xoff, py + (self.player.height / 2) + yoff + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
 				totalstartx = totalstartx + (scalemultiplier * shiftx * sourcewidth * -2)
 			end
 		end
