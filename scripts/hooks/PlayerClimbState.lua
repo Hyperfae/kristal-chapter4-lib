@@ -163,7 +163,7 @@ function PlayerClimbState:drawReticleHint()
         end
 		local starttable = {0, 21, 41}
 		local widthtable = {21, 20, 21}
-		local totalstartx = cyltower.tower_x - tile.x + xoff - 20
+		local totalstartx = cyltower.tower_x - tile.x + ((self.player.width / 2) + xoff) * 2 - 20
 		local totalwidth = (self.charge_timer / self.charge_time_2) * 62
 		local count = 3
 		local divisor = 120
@@ -200,7 +200,7 @@ function PlayerClimbState:drawReticleHint()
 				if subsection == count - 1 and cyltower.tile_width_fine ~= cyltower.tile_width and shiftx == -1 then
 					jankfix = (6 * (shiftx - 1)) / 2
 				end
-				Draw.drawPart(frames[index], totalstartx - jankfix, py + yoff + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
+				Draw.drawPart(frames[index], totalstartx - jankfix, py + ((self.player.height / 2) + yoff) * 2 + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 2, scalemultiplier * -2, -origin_x, -origin_y)
 				totalstartx = totalstartx + (scalemultiplier * shiftx * sourcewidth * -2)
 			end
 		end
