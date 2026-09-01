@@ -121,16 +121,15 @@ function PlayerClimbState:drawReticleHint()
 		if cyltower.appearance == 1 then
 			px = px + 40
 		end
-        local py = self.player.lasty + (self.player.height / 2) - 40
-		local _tilex = px / Game.world.map.cyltower.tile_width_fine
-		local _tiley = py / Game.world.map.cyltower.tile_height_fine
+        local py = self.player.lasty + (self.player.height / 2) - 20
+		local _tilex = math.floor(px / cyltower.tile_width_fine) + 1
 		if _tilex >= cyltower.horizontaltilecount then
 			_tilex = _tilex - cyltower.horizontaltilecount
 		end
 		if _tilex < 0 then
 			_tilex = _tilex + cyltower.horizontaltilecount
 		end
-		local tile = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(_tilex) + 1]
+		local tile = cyltower.tile_data[cyltower.tm_tileset[1]][_tilex]
         local angle = 0
         local xoff = 0
         local yoff = 0
@@ -183,8 +182,7 @@ function PlayerClimbState:drawReticleHint()
         Draw.setColor(col)
 		love.graphics.push()
 		love.graphics.origin()
-		local cx, cy, _, _ = Game.world.camera:getRect()
-		love.graphics.translate(-cx, -cy)
+		love.graphics.translate(-(Game.world.camera.x - SCREEN_WIDTH/2), -(Game.world.camera.y - SCREEN_HEIGHT/2))
 		for subsection = 0, count - 1 do
 			local tilex = _tilex + ((subsection + 1) * shiftx)
 			local tiley = _tiley + ((subsection + 1) * shifty)	
@@ -194,7 +192,7 @@ function PlayerClimbState:drawReticleHint()
 			if tilex < 0 then
 				tilex = tilex + cyltower.horizontaltilecount
 			end
-			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex) + 1]
+			local tile2 = cyltower.tile_data[cyltower.tm_tileset[1]][math.floor(tilex)]
 			if tile2.vis == 1 then
 				local scalemultiplier = tile2.xscale / cyltower.tile_width_fine
 				local sourcex = starttable[subsection + 1]
@@ -333,13 +331,13 @@ function PlayerClimbState:drawReticle(found, alpha)
             local py = self.player.lasty + (self.player.height / 2) - 20
 
             if self.direction == "down" then
-                py = py + 40 * found
+                py = py + cyltower.tile_height * found
             elseif self.direction == "right" then
-                px = px + 40 * found
+                px = px + cyltower.tile_width * found
             elseif self.direction == "up" then
-                py = py - 40 * found
+                py = py - cyltower.tile_height * found
             elseif self.direction == "left" then
-                px = px - 40 * found
+                px = px - cyltower.tile_width * found
             end
 
             local col = ColorUtils.mergeColor(COLORS.yellow, COLORS.white, 0.4 + (math.sin(self.charge_timer / 3) * 0.4))
