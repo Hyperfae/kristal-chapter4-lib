@@ -117,7 +117,7 @@ function PlayerClimbState:drawReticleHint()
         end
 
         alpha = MathUtils.clamp(self.charge_timer / 14, 0.1, 0.8)
-        local px = self.player.lastx + (self.player.width / 2) - 20
+        local px = self.player.lastx + (self.player.width / 2)
 		if cyltower.appearance == 1 then
 			px = px + 40
 		end
