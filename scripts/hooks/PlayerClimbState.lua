@@ -80,8 +80,8 @@ function PlayerClimbState:drawReticleHint()
         end
 
                 
-        local ix = self.player.lastx
-        local iy = self.player.lasty
+        local ix = self.player.x
+        local iy = self.player.y
 
         local px = ix
         local py = iy
@@ -117,38 +117,57 @@ function PlayerClimbState:drawReticleHint()
         end
 
         alpha = MathUtils.clamp(self.charge_timer / 14, 0.1, 0.8)
+		local px = self.player.x		
+		local px = self.player.y
+		local _tilex = px / Game.world.map.cyltower.tile_width_fine
+		local _tiley = py / Game.world.map.cyltower.tile_height_fine
+		if _tilex >= Game.world.map.cyltower.horizontaltilecount then
+			_tilex = _tilex - Game.world.map.cyltower.horizontaltilecount
+		end
+		if _tilex < 0 then
+			_tilex = _tilex + Game.world.map.cyltower.horizontaltilecount
+		end
+		local tile = Game.world.map.cyltower.tile_data[cyltower.tm_tileset[1]][_tilex]
         local angle = 0
         local xoff = 0
         local yoff = 0
-        --I couldn't figure this one out properly... sorry...
+		local shiftx = 0
+		local shifty = 0
         if self.direction == "down" then
             angle = 0
             xoff = -22
-            yoff = 25
+            yoff = 18
+			shifty = 1
         elseif self.direction == "right" then
             angle = 90
-            xoff = 8
+            xoff = 18
             yoff = 27
+			shiftx = 1
         elseif self.direction == "up" then
             angle = 180
             xoff = 22
-            yoff = -15
+            yoff = -18
+			shifty = -1
         elseif self.direction == "left" then
             angle = 270
-            xoff = -8
-            yoff = -17
+            xoff = -18
+            yoff = -22
+			shiftx = -1
         end
 
         local col = { 200 / 255, 200 / 255, 200 / 255, 0.85 }
         if found > 0 then
             col = { 1, 200 / 255, 132 / 255, 0.85 };
         end
-
+		local starttable = {0, 21, 41}
+		local widthtable = {21, 20, 21}
+		local totalstartx = Game.world.map.cyltower.tower_x + tile.x - 20
+		local totalwidth = (self.charge_timer / self.charge_time_2) * 62
+		local count = 3
+		local divisor = 120
         local origin_x = 11
-
         -- The offset of 1 is (most likely) due to GameMaker rounding being different from ours.
         local origin_y = -10 + 1
-
 
         local frames = Assets.getFrames("player/climb_reticle_hint")
 
@@ -159,7 +178,28 @@ function PlayerClimbState:drawReticleHint()
         local index = (math.floor(target_seconds * 1000 / 2) % #frames) + 1
 
         Draw.setColor(col)
-        Draw.drawPart(frames[index], (self.player.width / 2) + xoff, (self.player.height / 2) + yoff, 0, 0, 22, math.min(self.charge_timer / self.charge_time_2, 1) * 62, math.rad(-angle), 1, 0.98, -origin_x, -origin_y)
+		for subsection = 0, count - 1 do
+			local tilex = tilex + ((subsection + 1) * shiftx)
+			local tiley = tiley + ((subsection + 1) * shifty)	
+			if tilex >= Game.world.map.cyltower.horizontaltilecount then
+				tilex = tilex - Game.world.map.cyltower.horizontaltilecount
+			end
+			if tilex < 0 then
+				tilex = tilex + Game.world.map.cyltower.horizontaltilecount
+			end
+			local tile2 = Game.world.map.cyltower.tile_data[cyltower.tm_tileset[1]][tilex]
+			if tile2.vis == 1 then
+				local scalemultiplier = tile2.xscale / Game.world.map.cyltower.tile_width_fine
+				local sourcex = starttable[subsection + 1]
+				local sourcewidth = widthtable[subsection + 1]
+				local jankfix = 0
+				if (subsection == (count - 1) and Game.world.map.cyltower.tile_width_fine ~= Game.world.map.cyltower.tile_width and shiftx == -1 then
+					jankfix = (6 * (shiftx - 1)) / 2
+				end
+				Draw.drawPart(frames[index], totalstartx - jankfix, (self.player.height / 2) + yoff + 20 + (subsection * shifty * (divisor / count)), 0, sourcex, 22, MathUtils.clamp(totalwidth - sourcex, 0, sourcewidth), math.rad(-angle), 1, scalemultiplier * -1, -origin_x, -origin_y)
+				totalstartx = totalstartx + (scalemultiplier * shiftx * sourcewidth * -1)
+			end
+		end
         Draw.setColor(COLORS.white)
     end
 
@@ -251,8 +291,8 @@ function PlayerClimbState:updateClimbGrabEnd()
 
     if self.grab_timer >= (initwait + waittime) then
         if self.player.onrotatingtower then
-			self.player.x = MathUtils.round(self.player.x / 40) * 40
-			self.player.y = MathUtils.round(self.player.y / 40) * 40
+			self.player.x = MathUtils.round(self.player.x / 40) * 40 - 20
+			self.player.y = MathUtils.round(self.player.y / 40) * 40 - 20
 		else
 			self.player.x = MathUtils.round(self.player.x / 10) * 10
 			self.player.y = MathUtils.round(self.player.y / 10) * 10
