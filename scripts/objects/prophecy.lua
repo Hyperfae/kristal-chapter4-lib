@@ -287,11 +287,11 @@ function Prophecy:update()
 		if self:collidesWith(self.world.player) then
 			--self.afx.alpha = MathUtils.approach(self.afx.alpha, 1, DT*4)
 			self.panel_active = true
-			self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 1.2, DTMULT*0.1)
+			self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 1.2, 1 - (1 - 0.1) ^ DTMULT)
 			Ch4Lib.updateLightBeams(1 - (self.panel.panel_alpha / 1.2))
 		else
 			--self.afx.alpha = MathUtils.approach(self.afx.alpha, 0, DT*2)
-			self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 0, DTMULT*0.2)
+			self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 0, 1 - (1 - 0.2) ^ DTMULT)
 			self.panel_active = false
 			Ch4Lib.updateLightBeams(1 - (self.panel.panel_alpha / 1.2))
 		end

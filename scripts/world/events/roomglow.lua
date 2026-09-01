@@ -56,9 +56,9 @@ function RoomGlow:update()
 		end
 	end
 	if self.glowactive then
-		self.actind = MathUtils.lerp(self.actind, 1.05, self.lerpstrength * DTMULT)
+		self.actind = MathUtils.lerp(self.actind, 1.05, 1 - (1 - self.lerpstrength) ^ DTMULT)
 	else
-		self.actind = MathUtils.lerp(self.actind, -0.05, self.lerpstrength * DTMULT)
+		self.actind = MathUtils.lerp(self.actind, -0.05, 1 - (1 - self.lerpstrength) ^ DTMULT)
 	end
 	if self.tile_dark and self.tile_dark:getFX("shadow") then
 		self.tile_dark:getFX("shadow").alpha = self.actind
