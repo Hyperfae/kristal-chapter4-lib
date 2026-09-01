@@ -183,6 +183,8 @@ function PlayerClimbState:drawReticleHint()
         Draw.setColor(col)
 		love.graphics.push()
 		love.graphics.origin()
+		local cx, cy, _, _ = Game.world.camera:getRect
+		love.graphics.translate(-cx, -cy)
 		for subsection = 0, count - 1 do
 			local tilex = _tilex + ((subsection + 1) * shiftx)
 			local tiley = _tiley + ((subsection + 1) * shifty)	
