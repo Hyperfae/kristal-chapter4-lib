@@ -39,10 +39,10 @@ end
 function ClimbSwitch:update()
     super.update(self)
     self.siner = self.siner + DTMULT
-    local collider = Hitbox(self, 5, 5, 30, 30)
+    local collider = Hitbox(self, 0, 0, 40, 40)
     if self.con == 0 then
         Object.startCache()
-        if Game.world.player:collidesWith(collider) and Game.world.player:isClimbing() then
+        if Game.world.player:meetsCollider(collider) and Game.world.player:isClimbing() then
             if self.con == 0 then
                 self.con = 1
             end

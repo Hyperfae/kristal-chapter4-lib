@@ -135,9 +135,6 @@ function RotatingTower:postLoad()
 	self.tower_angle_prev = nil
 	self.tower_angle_prev2 = nil
 	self.maincharayprevious = Game.world.player.y
-	self.reticle_drawer = RotatingTowerReticleDrawer(self)
-	self.reticle_drawer.layer = Game.world.player and Game.world.player.layer or self.layer
-	Game.world:addChild(self.reticle_drawer)
 end
 
 function RotatingTower:update()

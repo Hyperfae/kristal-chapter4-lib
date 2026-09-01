@@ -19,7 +19,7 @@ function BellPlayable:init(data)
 	self.timer = 0
 	self.rung = 0
 	self.canring = properties["interactable"] ~= false
-	self:setHitbox(5, 5, 30, 30)
+	self:setHitbox(0, 0, 40, 40)
 	self.dont_draw_on_tower = true
 	if self.climb_obstacle and Game.world.map.cyltower then
 		self.visible = false
@@ -29,10 +29,10 @@ end
 
 function BellPlayable:update()
     super.update(self)
-	local collider = Hitbox(self, 5, 5, 30, 30)
+	local collider = Hitbox(self, 0, 0, 40, 40)
 	if self.con == 0 then
 		self.sprite.rotation = 0
-		if Game.world.player:collidesWith(collider) and Game.world.player:isClimbing() then
+		if Game.world.player:meetsCollider(collider) and Game.world.player:isClimbing() then
 			if self.con == 0 then
 				self.con = 1
 			end

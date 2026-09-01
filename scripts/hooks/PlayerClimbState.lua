@@ -18,7 +18,7 @@ function PlayerClimbState:updateClimbCamera()
         local camera_y = MathUtils.clamp(Game.world.map.cyltower.krisy + self.camera_y_offset, camera_min_y, camera_max_y)
 
         local t = 1 - (1 - camera_lerp_speed) ^ DTMULT
-        local ideal_y =  MathUtils.roundToMultiple(MathUtils.lerp(camera.y, camera_y, camera_lerp_speed * DTMULT), 2)
+		local ideal_y = MathUtils.lerp(camera.y, camera_y, t)
 
         camera:setPosition(camera_x, ideal_y)
     else
@@ -160,6 +160,104 @@ function PlayerClimbState:drawReticleHint()
     return found, alpha
 end
 
+function PlayerClimbState:updateClimbFall()
+    self.fall_speed = self.fall_speed + 0.5 * DTMULT
+
+    if (self.fall_speed >= self.fall_max_speed) then
+        self.fall_speed = self.fall_max_speed
+    end
+
+    if (self.fall_speed >= 20) and (self.fall_direction == "down") then
+        self.camera_y_offset = math.min(self.camera_y_offset + 2, 80)
+    end
+
+    if (self.fall_direction == "down") then
+        self.player.y = self.player.y + math.ceil(self.fall_speed) * DTMULT
+    elseif (self.fall_direction == "right") then
+        self.player.x = self.player.x + math.ceil(self.fall_speed) * DTMULT
+    elseif (self.fall_direction == "up") then
+        self.player.y = self.player.y - math.ceil(self.fall_speed) * DTMULT
+    elseif (self.fall_direction == "left") then
+        self.player.x = self.player.x - math.ceil(self.fall_speed) * DTMULT
+    end
+
+    self.fall_timer = self.fall_timer - DTMULT
+
+    if (self.fall_timer <= 0) then
+        if (self.can_grab) then
+            self.grab_x = self.last_x + (MathUtils.round((self.player.x - self.last_x) / 40) * 40)
+            self.grab_y = self.last_y + (MathUtils.round((self.player.y - self.last_y) / 40) * 40)
+			if self.player.onrotatingtower and self.grab_x > Game.world.map.cyltower.tower_circumference then
+				self.grab_x = self.grab_x - Game.world.map.cyltower.tower_circumference
+			end
+			if self.player.onrotatingtower and self.grab_x < 0 then
+				self.grab_x = self.grab_x + Game.world.map.cyltower.tower_circumference
+			end
+            if self:isOverlappingClimbable(ClimbArea, self.grab_x, self.grab_y) then
+                self.grab_state = 1
+                self.direction = "down"
+                self.fall_state = 0
+            end
+        end
+
+        local howlongfall = 660
+
+        if self.can_recover then
+            if Game.world.camera then
+                local x, y, w, h = Game.world.camera:getRect()
+
+                if self.fall_direction == "down" then
+                    if (self.player.y >= y + h + howlongfall) then
+                        self.fall_state = 0
+                        self.recover_state = 1
+                    end
+                elseif self.fall_direction == "up" then
+                    if (self.player.y <= y - howlongfall) then
+                        self.fall_state = 0
+                        self.recover_state = 1
+                    end
+                elseif self.fall_direction == "right" then
+                    if self.player.x >= x + w + howlongfall then
+                        self.fall_state = 0
+                        self.recover_state = 1
+                    end
+                elseif self.fall_direction == "left" then
+                    if self.player.x <= x - howlongfall then
+                        self.fall_state = 0
+                        self.recover_state = 1
+                    end
+                end
+            end
+        end
+    end
+end
+
+function PlayerClimbState:updateClimbGrabEnd()
+    self.grab_timer = self.grab_timer + DTMULT
+    local initwait = 7
+    local waittime = 8
+
+    if self.grab_timer >= initwait then
+        local progress = (self.grab_timer / waittime) - (initwait / waittime)
+        self.player.y = Utils.ease(self.grab_start_y, self.grab_y, progress, "inOutQuart")
+        self.player.x = Utils.ease(self.grab_start_x, self.grab_x, progress, "inOutQuart")
+    end
+
+    if self.grab_timer >= (initwait + waittime) then
+        if self.player.onrotatingtower then
+			self.player.x = MathUtils.round(self.player.x / 40) * 40 + 20
+			self.player.y = MathUtils.round(self.player.y / 40) * 40 + 20
+		else
+			self.player.x = MathUtils.round(self.player.x / 10) * 10
+			self.player.y = MathUtils.round(self.player.y / 10) * 10
+		end
+
+        self.grab_state = 0
+        self.neutral_state = 1
+        self.check_move = true
+    end
+end
+
 function PlayerClimbState:drawReticle(found, alpha)
     if not self._draw_reticle then
         return
@@ -277,10 +375,12 @@ function PlayerClimbState:updateClimbMove()
             dust:setOrigin(0.5, 0)
             if self.player.onrotatingtower then
                 dust:setPosition(Game.world.map.cyltower.krisx, Game.world.map.cyltower.krisy)
+				dust.physics.speed_x = -self.climbing_x_dir * 0.1
+				dust.layer = Game.world.map.cyltower.layer - 0.01
             else
                 dust:setPosition(self.player.x, self.player.y)
+				dust.layer = self.player.layer - 0.01
             end
-            dust.layer = self.player.layer - 0.01
 
             if self.jumping then
                 dust.x = dust.x + MathUtils.random(-10, 10)
@@ -367,13 +467,15 @@ function PlayerClimbState:updateClimbMove()
             local afterimage = nil
             if self.player.onrotatingtower then
                 afterimage = self.player.parent:addChild(Sprite(self.player.sprite:getTexture(), Game.world.map.cyltower.krisx, Game.world.map.cyltower.krisy + self.player.sprite.y * 2))
+				afterimage.physics.speed_x = -self.climbing_x_dir * 0.1
+				afterimage.layer = Game.world.map.cyltower.layer - 0.01
             else
                 afterimage = self.player.parent:addChild(Sprite(self.player.sprite:getTexture(), self.player.x, self.player.y + self.player.sprite.y * 2))
-            end
+				afterimage.layer = self.player.layer - 0.01
+            end 
             afterimage:setScale(2)
             afterimage:setOrigin(0.5)
             afterimage.alpha = 0.2
-            afterimage.layer = self.player.layer - 0.01
             afterimage:fadeOutSpeedAndRemove(0.04)
             self.player.parent:addChild(afterimage)
         end
@@ -442,8 +544,10 @@ function PlayerClimbState:updateClimbGrab()
         dust:setScale(2, 2)
         if self.player.onrotatingtower then
             dust:setPosition(Game.world.map.cyltower.krisx, Game.world.map.cyltower.krisy)
+			dust.layer = Game.world.map.cyltower.layer - 0.01
         else
             dust:setPosition(self.player.x, self.player.y)
+			dust.layer = self.player.layer - 0.01
         end
         dust.layer = self.player.layer - 0.01
         dust.physics.speed_y = -3
@@ -474,6 +578,14 @@ function PlayerClimbState:updateClimbGrab()
         self.grab_state = 3
         self.grab_start_y = self.player.y
         self.grab_start_x = self.player.x
+        if self.player.onrotatingtower then
+			if self.grab_start_x - self.grab_x > 180 then
+				self.grab_start_x = self.grab_start_x - Game.world.map.cyltower.tower_circumference
+			end
+			if self.grab_start_x - self.grab_x < -180 then
+				self.grab_start_x = self.grab_start_x + Game.world.map.cyltower.tower_circumference
+			end
+		end
     end
 end
 

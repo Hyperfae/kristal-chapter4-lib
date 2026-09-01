@@ -104,7 +104,7 @@ function ClimbWater:update()
 		if boty - (topy + yoff) > 8 then
 			Object.startCache()
 			local collider = Hitbox(self, adjustment + 8, topy + yoff, width - 16, boty - topy - 8)
-			if Game.world.player:collidesWith(collider) then
+			if Game.world.player:meetsCollider(collider) then
                 if Game.world.player.climb_state.fall_state == 0 and (Game.world.player.climb_state:isIdle() or Game.world.player.climb_state.charge_state > 0) then
                     Game.world.player:climbFall(self.fallingtimer, {
                         direction = self.falldir,
@@ -139,7 +139,7 @@ function ClimbWater:initWater()
 					for _,bucket in ipairs(Game.world.map:getEvents("climbwaterbucket")) do
 						local xx, yy = -(Game.world.camera.x-SCREEN_WIDTH/2), -(Game.world.camera.y-SCREEN_HEIGHT/2)
 						local collider = Hitbox(self, xx, yy + 40 * i, 40, 40)
-						if bucket:collidesWith(collider) and not bucket.generator then
+						if bucket:meetsCollider(collider) and not bucket.generator then
 							self.endy = bucket.y
 							altendy = 1
 						end
