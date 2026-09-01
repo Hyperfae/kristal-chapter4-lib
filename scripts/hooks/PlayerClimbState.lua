@@ -127,7 +127,7 @@ function PlayerClimbState:drawReticleHint()
 		if _tilex < 0 then
 			_tilex = _tilex + Game.world.map.cyltower.horizontaltilecount
 		end
-		local tile = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][_tilex]
+		local tile = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][math.floor(_tilex) + 1]
         local angle = 0
         local xoff = 0
         local yoff = 0
@@ -187,7 +187,7 @@ function PlayerClimbState:drawReticleHint()
 			if tilex < 0 then
 				tilex = tilex + Game.world.map.cyltower.horizontaltilecount
 			end
-			local tile2 = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][tilex]
+			local tile2 = Game.world.map.cyltower.tile_data[Game.world.map.cyltower.tm_tileset[1]][math.floor(tilex) + 1]
 			if tile2.vis == 1 then
 				local scalemultiplier = tile2.xscale / Game.world.map.cyltower.tile_width_fine
 				local sourcex = starttable[subsection + 1]
