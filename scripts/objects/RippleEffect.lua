@@ -80,8 +80,13 @@ function RippleEffect:draw()
 	love.graphics.setShader(self.shader)
 	for _, ripple in ipairs(self.ripples) do
 		ripple.life = math.max(0, ripple.life - DTMULT)
-		ripple.x = ripple.x + ripple.hsp * (ripple.dtmult_spd and DTMULT or 1)
-		ripple.y = ripple.y + ripple.vsp * (ripple.dtmult_spd and DTMULT or 1)
+		if ripple.dtmult_spd then
+			ripple.x = ripple.x + ripple.hsp * DTMULT
+			ripple.y = ripple.y + ripple.vsp * DTMULT
+		else
+			ripple.x = ripple.x + ripple.hsp
+			ripple.y = ripple.y + ripple.vsp
+		end
 		
 		if ripple.hsp > 0 then
 			ripple.hsp = MathUtils.approach(ripple.hsp, 0, ripple.fric*DTMULT)
