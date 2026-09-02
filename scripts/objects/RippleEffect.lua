@@ -7,7 +7,7 @@ function RippleEffect:init()
 	self.layer = WORLD_LAYERS["bottom"]
 end
 
-function RippleEffect:makeRipple(x, y, life, color, radmax, radstart, thickness, depth, hsp, vsp, fric, curve)
+function RippleEffect:makeRipple(x, y, life, color, radmax, radstart, thickness, depth, hsp, vsp, fric, curve, dtmult_spd)
 	life = life or 60
     color = color or ColorUtils.hexToRGB("#4A91F6")
 	radstart = radstart or 1
@@ -17,6 +17,7 @@ function RippleEffect:makeRipple(x, y, life, color, radmax, radstart, thickness,
 	vsp = vsp or 0
 	fric = fric or 0.1
 	curve = curve or Ch4Lib.ripple_curve["norm"]
+	dtmult_spd = dtmult_spd or true
 	table.insert(self.ripples, {
 		x = x,
 		y = y,
@@ -30,7 +31,8 @@ function RippleEffect:makeRipple(x, y, life, color, radmax, radstart, thickness,
 		hsp = hsp,
 		vsp = vsp,
 		fric = fric,
-		curve = curve
+		curve = curve,
+		dtmult_spd = dtmult_spd,
 	})
 end
 
@@ -78,8 +80,8 @@ function RippleEffect:draw()
 	love.graphics.setShader(self.shader)
 	for _, ripple in ipairs(self.ripples) do
 		ripple.life = math.max(0, ripple.life - DTMULT)
-		ripple.x = ripple.x + ripple.hsp * DTMULT
-		ripple.y = ripple.y + ripple.vsp * DTMULT
+		ripple.x = ripple.x + ripple.hsp * (ripple.dtmult_spd and DTMULT or 1)
+		ripple.y = ripple.y + ripple.vsp * (ripple.dtmult_spd and DTMULT or 1)
 		
 		if ripple.hsp > 0 then
 			ripple.hsp = MathUtils.approach(ripple.hsp, 0, ripple.fric*DTMULT)
