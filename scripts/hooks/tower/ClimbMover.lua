@@ -1,8 +1,7 @@
 ---@class FallingClimbArea : FallingClimbArea
 local ClimbMover, super = HookSystem.hookScript(ClimbMover)
 
-function ClimbMover:init(x, y, shape, settings)
-    super.init(self, x, y, shape, settings)
+function ClimbMover:postLoad()
 	if Game.world.map.cyltower then
 		self.visible = false
 	end

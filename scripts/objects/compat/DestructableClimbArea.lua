@@ -26,6 +26,7 @@ function DestructableClimbArea:init(x, y, shape, settings)
     end
 
     self.unsafe_area = nil
+	self.tile = nil
     Ch4Lib.logger:warnNotify("Replace DestructableClimbArea with FallingClimbArea!")
 end
 

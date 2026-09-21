@@ -20,7 +20,9 @@ function BellPlayable:init(data)
 	self.rung = 0
 	self.canring = properties["interactable"] ~= false
 	self:setHitbox(0, 0, 40, 40)
-	self.dont_draw_on_tower = true
+end
+
+function CoinBowl:postLoad()
 	if self.climb_obstacle and Game.world.map.cyltower then
 		self.visible = false
 		self.bellcordlength = properties["length"] or 150
@@ -74,8 +76,8 @@ function BellPlayable:draw()
     super.draw(self)
 end
 
-function CoinBowl:drawTowerBelow(tower, cull_top, cull_bottom)
-    if tower then
+function BellPlayable:drawTowerBelow(tower, cull_top, cull_bottom)
+    if tower and self.climb_obstacle then
 		local adjustment = -260
 		if tower.appearance == 1 then
 			adjustment = -520
@@ -113,8 +115,8 @@ function CoinBowl:drawTowerBelow(tower, cull_top, cull_bottom)
     end
 end
 
-function CoinBowl:drawTower(tower, cull_top, cull_bottom)
-    if tower then
+function BellPlayable:drawTower(tower, cull_top, cull_bottom)
+    if tower and self.climb_obstacle then
 		local adjustment = -260
 		if self.appearance == 1 then
 			adjustment = -520

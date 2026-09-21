@@ -35,12 +35,14 @@ function ClimbWaterBucket:init(data)
 	if self.generator then
 		self:setScale(self.scale_x, -self.scale_y)
 	end
+	self.stoptimerconds = nil
+end
+
+function ClimbWaterBucket:postLoad()
 	if Game.world.map.cyltower then
 		self.visible = false
 		self.x = self.x + 40
 	end
-	self.climb_obstacle = true
-	self.stoptimerconds = nil
 end
 
 function ClimbWaterBucket:update()

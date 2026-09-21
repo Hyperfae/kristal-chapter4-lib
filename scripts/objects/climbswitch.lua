@@ -30,7 +30,9 @@ function ClimbSwitch:init(data)
     if self.exit_script then
         assert(Registry.getEventScript(self.exit_script), "No such event script \""..self.exit_script.."\"")
     end
-	self.climb_obstacle = true
+end
+
+function ClimbSwitch:postLoad()
 	if Game.world.map.cyltower then
 		self.visible = false
 	end

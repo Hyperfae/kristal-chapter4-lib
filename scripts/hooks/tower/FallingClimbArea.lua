@@ -4,7 +4,10 @@ local FallingClimbArea, super = HookSystem.hookScript(FallingClimbArea)
 function FallingClimbArea:init(x, y, settings)
     super.init(self, x, y, settings)
 	self.tile = nil
-    if Game.world.map.cyltower then
+end
+
+function FallingClimbArea:postLoad()
+	if Game.world.map.cyltower then
 		self.visible = false
 	end
 end

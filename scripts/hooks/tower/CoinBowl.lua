@@ -1,8 +1,7 @@
 ---@class CoinBowl : CoinBowl
 local CoinBowl, super = HookSystem.hookScript(CoinBowl)
 
-function CoinBowl:init(x, y, settings)
-    super.init(self, x, y, settings)
+function CoinBowl:postLoad()
 	if Game.world.map.cyltower then
 		self.visible = false
 	end
