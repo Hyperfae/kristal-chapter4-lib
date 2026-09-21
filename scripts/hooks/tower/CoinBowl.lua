@@ -144,9 +144,9 @@ function CoinBowl:drawTowerAbove(tower, cull_top, cull_bottom)
 
 			local texture = sprite[math.floor((self.siner / 4) % #sprite) + 1]
 
-			local texture_x = tower.tower_x + MathUtils.lengthDirX(tower.tower_radius + dist_from_tower, -math.rad(angle)) + 20 - (math.floor(texture:getWidth() / 2) * 2)
+			local texture_x = tower.tower_x + MathUtils.lengthDirX(tower.tower_radius + dist_from_tower, -math.rad(coin_angle)) + 20 - (math.floor(texture:getWidth() / 2) * 2)
 			local texture_y = self.y + 30 - (math.floor(texture:getHeight() / 2) * 2) + math.sin(self.siner / 20) * 4
-			local factor = math.sin(math.rad(angle))
+			local factor = math.sin(math.rad(coin_angle))
 			Draw.setColor(ColorUtils.mergeColor(COLORS.white, COLORS.black, MathUtils.clamp(1 - factor, 0, 1)))
 			if self.state == "IDLE" then
 				Draw.draw(texture, texture_x, texture_y, 0, 2)
