@@ -8,8 +8,10 @@ function FallingClimbArea:init(x, y, settings)
 	end
 end
 
-function FallingClimbArea:drawTower(tower, cull_top, cull_bottom)
-    if tower then
+function FallingClimbArea:draw()
+    if Game.world.map.cyltower then
+        local tower = Game.world.map.cyltower
+
         love.graphics.push()
         love.graphics.origin()
         love.graphics.translate(-(Game.world.camera.x - SCREEN_WIDTH/2), -(Game.world.camera.y - SCREEN_HEIGHT/2))
@@ -39,6 +41,8 @@ function FallingClimbArea:drawTower(tower, cull_top, cull_bottom)
         end
 
         love.graphics.pop()
+    else
+        super.draw(self)
     end
 end
 
