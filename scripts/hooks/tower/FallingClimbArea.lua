@@ -27,14 +27,14 @@ function FallingClimbArea:draw()
         if tile.vis == 1 then
             Draw.setColor(tile.color)
 			if self.tile then
-				local tile_width, tile_height = self.tileset:getTileSize(self.tileset:getDrawTile(self.tile))
-				local sx = self.width / tile_width * (self.tile_flip_x and -1 or 1)
-				local sy = self.height / tile_height * (self.tile_flip_y and -1 or 1)
-				if self.tileset.preserve_aspect_fit then
+				local tile_width, tile_height = self.tile.tileset:getTileSize(self.tile.tileset:getDrawTile(self.tile.tile))
+				local sx = self.tile.width / tile_width * (self.tile.tile_flip_x and -1 or 1)
+				local sy = self.tile.height / tile_height * (self.tile.tile_flip_y and -1 or 1)
+				if self.tile.tileset.preserve_aspect_fit then
 					sx = MathUtils.absMin(sx, sy)
 					sy = sx
 				end
-				self.tile.tileset:drawTile(self.tile.tile, tower.tower_x + tile.x + self.width/2, self.y + (tower.tile_height_fine / 4) + self.height/2, 0, ((tile.xscale * 2) / tower.tile_width_fine), 2, tile_width/2, tile_height/2)
+				self.tile.tileset:drawTile(self.tile.tile, tower.tower_x + tile.x + self.tile.width/2, self.y + (tower.tile_height_fine / 4) + self.tile.height/2, 0, ((tile.xscale * 2) / tower.tile_width_fine), 2, tile_width/2, tile_height/2)
 			elseif self.sprite then
 				Draw.draw(self.sprite:getTexture(), tower.tower_x + tile.x, self.y + (tower.tile_height_fine / 4), 0, ((tile.xscale * 2) / tower.tile_width_fine), 2, 2, 2)
 			end
