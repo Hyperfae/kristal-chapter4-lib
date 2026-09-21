@@ -125,4 +125,21 @@ function ClimbSwitch:update()
     self.complexsnd:update()
 end
 
+function ClimbSwitch:drawTower(tower, cull_top, cull_bottom)
+    if tower then
+		local xscale_scaled = 1 / tower.tile_width_fine
+		local tilex = math.floor(((self.x + 40) * xscale_scaled) + 1)
+		if tilex > tower.horizontaltilecount - 1 then
+			tilex = tilex - tower.horizontaltilecount - 1
+		elseif tilex < 0 then
+			tilex = tilex + tower.horizontaltilecount - 1
+		end
+		local tile = tower.tile_data[tower.tm_tileset[1]][tilex - 1]
+		if tile.vis == 1 then
+			Draw.setColor(tile.color)
+			Draw.draw(self.sprite.texture, tower.tower_x + self.graphics.shake_x + tile.x, self.y + 10 + self.graphics.shake_y, 0, (tile.xscale * 2) / tower.tile_width_fine, 2, 0, 0)
+		end
+    end
+end
+
 return ClimbSwitch
