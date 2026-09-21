@@ -3,9 +3,6 @@ local FallingClimbArea, super = HookSystem.hookScript(FallingClimbArea)
 
 function FallingClimbArea:init(x, y, settings)
     super.init(self, x, y, settings)
-	if Game.world.map.tower then
-		self.visible = false
-	end
 end
 
 function FallingClimbArea:draw()
