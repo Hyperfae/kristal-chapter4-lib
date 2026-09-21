@@ -124,7 +124,7 @@ function lib:init()
     Game:registerEvent("climbcoin", function(data)
         return ClimbCoin(data.x, data.y, {
             value = data.properties.value,
-            accurate_hitbox = true -- I didn't know these had a broken hitbox before... Whoops!
+            accurate_hitbox = false -- I didn't know these had a broken hitbox before... Whoops!
         })
     end)
     Game:registerEvent("climbswitch", function(data)
