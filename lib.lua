@@ -122,7 +122,7 @@ function lib:init()
         return PathEnemyTurner(data)
     end)
     Game:registerEvent("climbcoin", function(data)
-        return ClimbCoin(data.x, data.y, 
+        return ClimbCoin(data.x, data.y, {
             value = data.properties.value,
             accurate_hitbox = true -- I didn't know these had a broken hitbox before... Whoops!
         })
