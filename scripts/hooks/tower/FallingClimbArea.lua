@@ -1,8 +1,8 @@
 ---@class FallingClimbArea : FallingClimbArea
 local FallingClimbArea, super = HookSystem.hookScript(FallingClimbArea)
 
-function FallingClimbArea:init(x, y, settings)
-    super.init(self, x, y, settings)
+function FallingClimbArea:init(x, y, shape, settings)
+    super.init(self, x, y, shape, settings)
 	self.tile = nil
 end
 
