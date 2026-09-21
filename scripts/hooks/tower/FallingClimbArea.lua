@@ -15,6 +15,9 @@ function FallingClimbArea:applyTileObject(data, map)
 
     tile:setPosition(ox * self.width, oy * self.height)
 
+    if Game.world.map.cyltower then
+		tile.visible = false
+	end
 	self.tile = tile
     self:addChild(tile)
 end
