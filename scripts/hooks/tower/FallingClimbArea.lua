@@ -1,10 +1,6 @@
 ---@class FallingClimbArea : FallingClimbArea
 local FallingClimbArea, super = HookSystem.hookScript(FallingClimbArea)
 
-function FallingClimbArea:init(x, y, settings)
-    super.init(self, x, y, settings)
-end
-
 function FallingClimbArea:draw()
     if Game.world.map.cyltower then
         local tower = Game.world.map.cyltower
