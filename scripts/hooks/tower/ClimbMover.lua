@@ -3,7 +3,7 @@ local ClimbMover, super = HookSystem.hookScript(ClimbMover)
 
 function ClimbMover:init(x, y, shape, settings)
     super.init(self, x, y, shape, settings)
-	if Game.world.map.tower then
+	if Game.world.map.cyltower then
 		self.visible = false
 	end
 end

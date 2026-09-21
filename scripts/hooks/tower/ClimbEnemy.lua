@@ -3,7 +3,7 @@ local ClimbEnemy, super = HookSystem.hookScript(ClimbEnemy)
 
 function ClimbEnemy:init(x, y, texture)
     super.init(self, x, y, texture)
-	if Game.world.map.tower then
+	if Game.world.map.cyltower then
 		self.visible = false
 	end
 end
