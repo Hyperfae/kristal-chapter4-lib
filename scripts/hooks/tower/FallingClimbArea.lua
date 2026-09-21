@@ -1,6 +1,24 @@
 ---@class FallingClimbArea : FallingClimbArea
 local FallingClimbArea, super = HookSystem.hookScript(FallingClimbArea)
 
+function FallingClimbArea:init(x, y, settings)
+    super.init(self, x, y, settings)
+	self.tile = nil
+end
+
+function FallingClimbArea:applyTileObject(data, map)
+    local tile = map:createTileObject(data, 0, 0, self.width, self.height)
+    tile.debug_select = false
+
+    local ox, oy = tile:getOrigin()
+    self:setOrigin(ox, oy)
+
+    tile:setPosition(ox * self.width, oy * self.height)
+
+	self.tile = tile
+    self:addChild(tile)
+end
+
 function FallingClimbArea:draw()
     if Game.world.map.cyltower then
         local tower = Game.world.map.cyltower
