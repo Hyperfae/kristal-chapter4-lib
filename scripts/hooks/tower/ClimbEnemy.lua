@@ -47,4 +47,4 @@ function ClimbEnemy:drawTower(tower, cull_top, cull_bottom)
     end
 end
 
-return FallingClimbArea
+return ClimbEnemy
