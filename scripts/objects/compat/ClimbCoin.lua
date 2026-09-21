@@ -6,7 +6,7 @@ local ClimbCoin, super = Class(CoinBowl)
 ---@param settings CoinBowlSettings?
 function ClimbCoin:init(x, y, settings)
     super.init(self, x, y, settings)
-    Kristal.Console:warn("Replace ClimbCoin with CoinBowl!")
+    Ch4Lib.logger:warnNotify("Replace ClimbCoin with CoinBowl!")
 end
 
 return ClimbCoin
