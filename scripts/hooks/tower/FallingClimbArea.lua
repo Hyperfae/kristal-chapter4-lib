@@ -60,9 +60,9 @@ function FallingClimbArea:drawTower(tower, cull_top, cull_bottom)
 					sx = MathUtils.absMin(sx, sy)
 					sy = sx
 				end
-				self.tile.tileset:drawTile(self.tile.tile, tower.tower_x + tile_x + self.tile.width/2, self.y + 10 + self.tile.height/2, 0, tile_xscale, tile_yscale, tile_width/2, tile_height/2)
+				self.tile.tileset:drawTile(self.tile.tile, tower.tower_x + tile_x + self.tile.width/2, self.y + 10 + self.tile.height/2, 0, tile_xscale * 2, tile_yscale * 2, tile_width/2, tile_height/2)
 			elseif self.sprite then
-				Draw.draw(self.sprite:getTexture(), tower.tower_x + tile.x, self.y + 10, 0, tile_xscale, tile_yscale, 2, 2)
+				Draw.draw(self.sprite:getTexture(), tower.tower_x + tile.x, self.y + 10, 0, tile_xscale * 2, tile_yscale * 2, 2, 2)
 			end
 		end
     end
