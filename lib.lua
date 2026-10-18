@@ -145,6 +145,9 @@ function lib:init()
     Game:registerEvent("destructableclimbarea", function(data)
     return DestructableClimbArea(data.x, data.y, { data.width, data.height }, data)
     end)
+    Game:registerEvent("rotatingtower", function(data)
+        return RotatingTower(data)
+    end)
 end
 
 function Ch4Lib.updateLightBeams(alpha)

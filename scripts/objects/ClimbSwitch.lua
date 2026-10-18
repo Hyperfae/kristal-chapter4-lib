@@ -1,4 +1,4 @@
----@class Event.climbcoin : Event
+---@class ClimbSwitch : Event
 local ClimbSwitch, super = Class(Event, "ClimbSwitch")
 
 function ClimbSwitch:init(data)

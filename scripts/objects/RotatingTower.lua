@@ -1,5 +1,5 @@
----@class Event.rotatingtower : Event
-local RotatingTower, super = Class(Event, "rotatingtower")
+---@class RotatingTower : Event
+local RotatingTower, super = Class(Event, "RotatingTower")
 
 function RotatingTower:init(data)
     super.init(self, data)

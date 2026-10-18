@@ -1,3 +1,4 @@
+---@class RippleEffect : Object
 local RippleEffect, super = Class(Object)
 
 function RippleEffect:init()

@@ -1,3 +1,4 @@
+---@class PathEnemyTurner : Event
 local PathEnemyTurner, super = Class(Event, "PathEnemyTurner")
 
 function PathEnemyTurner:init(data)

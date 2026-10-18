@@ -1,4 +1,4 @@
----@class FountainShadowFX : ShadowFX
+---@class ChurchShadowFX : ShadowFX
 ---@overload fun(...) : FountainShadowFX
 local ChurchShadowFX, super = Class(ShadowFX)
 

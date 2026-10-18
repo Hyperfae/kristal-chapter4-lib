@@ -1,4 +1,4 @@
----@class Event.bellplayable : Event
+---@class BellPlayable : Event
 local BellPlayable, super = Class(Event, "BellPlayable")
 
 function BellPlayable:init(data)
